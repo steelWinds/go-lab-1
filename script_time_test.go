@@ -14,8 +14,6 @@ var tableInputs = []testTable{
 	{input: 1},
 	{input: 10},
 	{input: 100},
-	{input: 500},
-	{input: 1000},
 }
 
 func BenchmarkTime(b *testing.B) {

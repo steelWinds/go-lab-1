@@ -6,18 +6,27 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-func getMinNumber(rows float64, cols float64) float64 {
+func getFloats(c chan []float64, size int) {
+	c <- randFloats(size)
+}
+
+func createMatrix(c chan []float64, rows int, cols int) {
+	primes := <-c
+
+	mat.NewDense(rows, cols, primes)
+}
+
+func getMinNumber(rows float64, cols float64) {
 	absRows := int(math.Abs(rows))
 	absCols := int(math.Abs(cols))
 	absSize := absRows * absCols
 
 	if absRows < 1 || absCols < 1 {
-		return 0
+		return
 	}
 
-	primes := randFloats(absSize)
+	var c chan []float64 = make(chan []float64)
 
-	matrix := mat.NewDense(absRows, absCols, primes)
-
-	return mat.Min(matrix)
+	go getFloats(c, absSize)
+	go createMatrix(c, absRows, absCols)
 }
